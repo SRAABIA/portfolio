@@ -13,6 +13,14 @@
     <noscript>
         <link rel="stylesheet" href="assets/css/noscript.css" />
     </noscript>
+    <style>
+      #success-message {
+          display: none;
+          color: green;
+          padding-bottom: 20px;
+          font-weight: 400;
+      }
+  </style>
 </head>
 
 <body class="is-preload">
@@ -48,7 +56,7 @@
             <!-- Intro -->
             <article id="intro">
                 <h2 class="major">Intro</h2>
-                <span class="image main"><img src="images/secondsem.jpg" alt="" /></span>
+                <span class="image main"><img src="images/bestmemories.jpg" alt="" /></span>
                 <p>
                     Hi there! I'm Syeda Rabia Hashmi, a passionate Computer Science student at FAST University, currently diving
                     deep into the world of AI and web development. With a strong command over React, I love crafting responsive
@@ -193,7 +201,7 @@
             <!-- Contact -->
             <article id="contact">
                 <h2 class="major">Get in Touch</h2>
-                <form method="post" action="https://script.google.com/macros/s/AKfycbx5CqsAWFJ_kYISrh3DBTfm2dqOJKZI6snyxnKF3YtcFCz3nFlNkPGiyR-Jli4teT2uYg/exec">
+                <form id="contact-form" method="post" action="https://script.google.com/macros/s/AKfycbwDYC7llt3omB2MNvWrM2gFi1myxVArGOP11wlIDRIxbYgdd8hfgSdGWcW0fllMxonnmQ/exec">
                   <div class="fields">
                       <div class="field half">
                           <label for="name">Name</label>
@@ -212,7 +220,11 @@
                       <li><input type="submit" value="Send Message" class="primary" /></li>
                       <li><input type="reset" value="Clear" /></li>
                   </ul>
+
+                  <img id="loading-gif" src="assets/1484.gif" alt="Loading..." style="display: none;">
               </form>
+              <div id="success-message">Your message has been sent successfully!!</div>
+          
                 <ul class="icons">
                     <li><a href="https://github.com/SRAABIA" class="icon brands fa-github"><span class="label">GitHub</span></a>
                     </li>
@@ -238,6 +250,42 @@
     <script src="assets/js/breakpoints.min.js"></script>
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+      document.getElementById('contact-form').addEventListener('submit', function(event) {
+          event.preventDefault();
+
+          const form = event.target;
+          const data = new FormData(form);
+          const action = form.action;
+          const loadingGif = document.getElementById('loading-gif');
+          loadingGif.style.display = 'block';
+          fetch(action, {
+              method: 'POST',
+              body: data,
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.result === 'success') {
+                const successMessage = document.getElementById('success-message');
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    // Hide the success message after 1.5 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 1500);
+              } else {
+                  alert('There was an error sending your message. Please try again later.');
+              }
+          })
+          .catch(error => {
+              alert('There was an error sending your message. Please try again later.');
+          })
+          .finally(() => {
+            // Hide loading GIF
+            loadingGif.style.display = 'none';
+        });
+      });
+  </script>
 </body>
 
 </html>
